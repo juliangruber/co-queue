@@ -7,43 +7,48 @@
 
 ## Example
 
-  Create a queue with one producer and two consumers, where load will be evenly distributed:
+  Create a queue with one producer and two consumers doing fake work:
 
 ```js
 var Queue = require('co-queue');
 var co = require('co');
+var wait = require('co-wait');
 
 var queue = new Queue;
 
 co(function*(){
   while (true) {
     console.log('consumer 1: %s', yield queue.next());
+    yield wait(Math.random() * 1000);
   }
 })();
 
 co(function*(){
   while (true) {
     console.log('consumer 2: %s', yield queue.next());
+    yield wait(Math.random() * 1000);
   }
 })();
 
 setInterval(function(){
   queue.push(Math.random());
-}, 500);
+}, 300);
 ```
 
 The output is:
 
 ```bash
 $ make example
-consumer 1: 0.7542695235460997
-consumer 2: 0.9973183961119503
-consumer 1: 0.10852471622638404
-consumer 2: 0.08832448674365878
-consumer 1: 0.7233098871074617
-consumer 2: 0.19350069551728666
-consumer 1: 0.2699217761401087
-consumer 2: 0.3614544642623514
+consumer 1: 0.4872316620312631
+consumer 2: 0.8702194727957249
+consumer 1: 0.200025983620435
+consumer 2: 0.14811497158370912
+consumer 2: 0.6677501150406897
+consumer 1: 0.5147413061931729
+consumer 2: 0.6373226766008884
+consumer 1: 0.5006165818776935
+consumer 2: 0.15247466461732984
+consumer 2: 0.9118324755690992
 ^C
 ```
 
