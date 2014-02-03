@@ -2,6 +2,8 @@
 # co-queue
 
   A FIFO queue for co.
+  
+  [![build status](https://secure.travis-ci.org/segmentio/co-queue.png)](http://travis-ci.org/segmentio/co-queue)
 
 ## Example
 
