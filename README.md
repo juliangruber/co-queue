@@ -64,6 +64,14 @@ $ npm install co-queue
 ### Queue#push(data)
 
   Push `data` onto the queue.
+  
+  `Queue#push` is bound to the queue, so hooking into existing libraries is easy:
+  
+```js
+emitter.on('data', queue.push);
+stream.on('data', queue.push);
+fn(queue.push);
+```
 
 ### Queue#next()
 
@@ -72,16 +80,6 @@ $ npm install co-queue
 ### Queue#max(max)
 
   Set the maximum buffer size. When reached, new data will be dropped.
-
-### Queue#from(source[, arg])
-
-  Feed `source` into the queue.
-
-  Possible sources:
-
-  - functions: `queue.from(fn)`
-  - event emitters: `queue.from(emitter, event)`
-  - streams: `queue.from(stream)`
 
 ### Queue#events.on('overflow', fn)
 

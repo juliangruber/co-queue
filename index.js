@@ -23,10 +23,11 @@ function Queue(){
   this.fns = [];
   this.max(Infinity);
   this.events = new Emitter;
+  this.push = this.push.bind(this);
 }
 
 /**
- * Push `data` onto the queue.
+ * Push `data` onto the queue. Bound to `queue`.
  *
  * @param {Mixed} data
  * @api public
@@ -65,82 +66,4 @@ Queue.prototype.max = function(max){
   this._max = max;
   if (this.buf.length > max) this.buf.length = max;
   return this;
-};
-
-/**
- * Feed `source` into the queue.
- *
- * Possible sources:
- *
- *   - functions: `queue.from(fn)`
- *   - event emitters: `queue.from(emitter, event)`
- *   - streams: `queue.from(stream)`
- *
- * @param {Mixed} source
- * @param {Mixed=} arg
- * @return {Queue}
- * @api public
- */
-
-Queue.prototype.source = function(source, arg) {
-  if ('object' == typeof source && source.pipe) {
-    return this.sourceStream(source);
-  } else if ('object' == typeof source) {
-    return this.sourceEmitter(source, arg);
-  } else if ('function' == typeof source) {
-    return this.sourceFunction(source);
-  } else {
-    throw new Error('unknown source');
-  }
-};
-
-/**
- * Feed `fn` into the queue.
- *
- * @param {Function} fn
- * @return {Queue}
- * @api private
- */
-
-Queue.prototype.sourceFunction = function(fn){
-  var self = this;
-  fn(function(data){
-    self.push(data);
-  });
-};
-
-/**
- * Feed `emitter`'s `event` into the queue.
- *
- * @param {EventEmitter} emitter
- * @param {String} event
- * @return {Queue}
- * @api private
- */
-
-Queue.prototype.sourceEmitter = function(emitter, event){
-  var self = this;
-  emitter.on(event, function(data){
-    self.push(data);
-  });
-  return self;
-};
-
-/**
- * Feed `stream` into the queue.
- *
- * @param {Stream} stream
- * @return {Queue}
- * @api private
- */
-
-Queue.prototype.sourceStream = function(stream){
-  var self = this;
-  var writable = new Writable({ objectMode: true });
-  writable._write = function(data, enc, done){
-    self.push(data);
-    done();
-  };
-  stream.pipe(writable);
-  return self;
 };

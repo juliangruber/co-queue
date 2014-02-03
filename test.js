@@ -65,6 +65,22 @@ describe('Queue', function(){
         yield wait();
       })(done);
     });
+    
+    it('should be bound', function(done){
+      var queue = new Queue;
+      var emitter = new Emitter;
+      emitter.on('data', queue.push);
+      
+      co(function*(){
+        equal(yield queue.next(), 'foo');
+        equal(yield queue.next(), 'bar');
+        equal(yield queue.next(), 'baz');
+      })(done);
+      
+      emitter.emit('data', 'foo');
+      emitter.emit('data', 'bar');
+      emitter.emit('data', 'baz');
+    });
   });
   
   describe('max()', function(){
@@ -93,63 +109,6 @@ describe('Queue', function(){
       
       queue.push('foo');
       queue.push('bar');
-    });
-  });
-  
-  describe('source(function)', function(){
-    it('should call function calls', function(done){
-      var emitter = new Emitter;
-      var queue = new Queue;
-      queue.source(emitter.on.bind(emitter, 'data'));
-      
-      co(function*(){
-        equal(yield queue.next(), 'foo');
-        equal(yield queue.next(), 'bar');
-        equal(yield queue.next(), 'baz');
-      })(done);
-      
-      emitter.emit('data', 'foo');
-      emitter.emit('data', 'bar');
-      emitter.emit('data', 'baz');
-    });
-  });
-  
-  describe('source(emitter, event)', function(){
-    it('should read the event', function(done){
-      var emitter = new Emitter;
-      var queue = new Queue;
-      queue.source(emitter, 'event');
-
-      co(function*(){
-        equal(yield queue.next(), 'foo');
-        equal(yield queue.next(), 'bar');
-        equal(yield queue.next(), 'baz');
-      })(done);
-      
-      emitter.emit('event', 'foo');
-      emitter.emit('event', 'bar');
-      emitter.emit('event', 'baz');
-    });
-  });
-  
-  describe('source(stream)', function(){
-    it('should read the stream', function(done){
-      var stream = new Readable;
-      stream._read = function(){
-        this.push('foo');
-        this.push('bar');
-        this.push('baz');
-        this.push(null);
-      };
-      
-      var queue = new Queue;
-      queue.source(stream);
-      
-      co(function*(){
-        equal(yield queue.next(), 'foo');
-        equal(yield queue.next(), 'bar');
-        equal(yield queue.next(), 'baz');
-      })(done);
     });
   });
 });
