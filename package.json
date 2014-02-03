@@ -1,0 +1,15 @@
+{
+  "name": "co-queue",
+  "version": "1.0.0",
+  "description": "A FIFO queue for co",
+  "license": "MIT",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": "segmentio/co-queue",
+  "devDependencies": {
+    "co-wait": "0.0.0",
+    "co": "~3.0.2",
+    "mocha": "~1.17.1"
+  }
+}
