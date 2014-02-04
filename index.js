@@ -1,9 +1,7 @@
-
 /**
  * Module dependencies.
  */
 
-var Writable = require('stream').Writable;
 var Emitter = require('events').EventEmitter;
 
 /**
