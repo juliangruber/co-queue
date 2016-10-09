@@ -21,14 +21,14 @@ co(function*(){
     console.log('consumer 1: %s', yield queue.next());
     yield wait(Math.random() * 1000);
   }
-})();
+});
 
 co(function*(){
   while (true) {
     console.log('consumer 2: %s', yield queue.next());
     yield wait(Math.random() * 1000);
   }
-})();
+});
 
 setInterval(function(){
   queue.push(Math.random());
