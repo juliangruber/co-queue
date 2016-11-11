@@ -32,7 +32,7 @@ function Queue(){
  */
 
 Queue.prototype.push = function(data){
-  if (this.fns.length) return this.fns.shift()(null, data);
+  if (this.fns.length) return this.fns.shift()(data);
   if (this.buf.length == this._max) return this.events.emit('overflow', data);
   this.buf.push(data);
 };
@@ -46,10 +46,10 @@ Queue.prototype.push = function(data){
 
 Queue.prototype.next = function(){
   var self = this;
-  return function(fn){
-    if (self.buf.length) return fn(null, self.buf.shift());
-    self.fns.push(fn);
-  };
+  return new Promise(function(resolve){
+    if (self.buf.length) return resolve(self.buf.shift());
+    self.fns.push(resolve);
+  });
 };
 
 /**
