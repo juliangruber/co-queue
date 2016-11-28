@@ -9,7 +9,7 @@
   "repository": "segmentio/co-queue",
   "devDependencies": {
     "co-wait": "0.0.0",
-    "co": "~3.0.2",
-    "mocha": "~1.17.1"
+    "co": "~4.6.0",
+    "mocha": "~3.1.2"
   }
 }
